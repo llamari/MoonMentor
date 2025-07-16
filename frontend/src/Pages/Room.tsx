@@ -43,7 +43,7 @@ export function Room() {
     dayjs.extend(relativeTime);
     dayjs.locale('pt-br')
 
-    const { data: roomsData, isLoading: isRoomsLoading } = useQuery({
+    const { data: roomsData } = useQuery({
         queryKey: ['get-rooms'],
         queryFn: async () => {
             const response = await fetch('http://localhost:3333/rooms')
@@ -63,8 +63,12 @@ export function Room() {
 
 
     useEffect(() => {
-        if (questionsFromAPI) {
-            setQuestions(questionsFromAPI);
+        const sortedQuestions = questionsFromAPI?.sort((a, b) => {
+            return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        })
+
+        if (sortedQuestions) {
+            setQuestions(sortedQuestions);
         }
     }, [questionsFromAPI]);
 
@@ -196,10 +200,10 @@ export function Room() {
                                 <Button
                                     variant="outline"
                                     size="icon"
-                                    className={`transition-colors duration-300 ${darkMode ? "border-purple-600 hover:bg-purple-800" : "border-purple-300 hover:bg-purple-100"
+                                    className={`cursor-pointer transition-colors duration-300 ${darkMode ? "border-purple-600 hover:bg-purple-800" : "border-purple-300 hover:bg-purple-100"
                                         }`}
                                 >
-                                    <ArrowLeft className="h-4 w-4" />
+                                    <ArrowLeft className={`h-4 w-4 ${darkMode ? "text-white" : "text-black"}`} />
                                     <span className="sr-only">Back to rooms</span>
                                 </Button>
                             </Link>
@@ -214,11 +218,11 @@ export function Room() {
                             variant="outline"
                             size="icon"
                             onClick={toggleDarkMode}
-                            className={`transition-colors duration-300 ${darkMode ? "border-purple-600 hover:bg-purple-800" : "border-purple-300 hover:bg-purple-100"
+                            className={`cursor-pointer transition-colors duration-300 ${darkMode ? "border-purple-600 hover:bg-purple-800" : "border-purple-300 hover:bg-purple-100"
                                 }`}
                         >
-                            {darkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-                            <span className="sr-only">Toggle dark mode</span>
+                            {darkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4 text-purple-900" />}
+                            <span className="sr-only">Mudar para modo {darkMode ? "claro" : "escuro"}</span>
                         </Button>
                     </div>
                 </div>
@@ -235,15 +239,15 @@ export function Room() {
                                 }`}
                         >
                             <CardHeader>
-                                <CardTitle className={`text-lg ${darkMode ? "text-white" : "text-gray-900"}`}>Record Audio</CardTitle>
+                                <CardTitle className={`text-lg ${darkMode ? "text-white" : "text-gray-900"}`}>Gravar áudio</CardTitle>
                                 <CardDescription className={darkMode ? "text-purple-200" : "text-purple-600"}>
-                                    Record your voice to ask questions about the content
+                                    Grave sua voz para fazer perguntas sobre o conteúdo
                                 </CardDescription>
                             </CardHeader>
                             <CardContent>
                                 <Button
                                     onClick={isRecording ? stopRecording : startRecording}
-                                    className={`w-full transition-all duration-300 ${isRecording
+                                    className={`cursor-pointer w-full transition-all duration-300 ${isRecording
                                         ? "bg-red-600 hover:bg-red-700 text-white animate-pulse"
                                         : darkMode
                                             ? "bg-purple-600 hover:bg-purple-700 text-white"
@@ -253,12 +257,12 @@ export function Room() {
                                     {isRecording ? (
                                         <>
                                             <MicOff className="h-4 w-4 mr-2" />
-                                            Stop Recording
+                                            Parar gravação
                                         </>
                                     ) : (
                                         <>
                                             <Mic className="h-4 w-4 mr-2" />
-                                            Start Recording
+                                            Iniciar gravação
                                         </>
                                     )}
                                 </Button>
@@ -271,9 +275,9 @@ export function Room() {
                                 }`}
                         >
                             <CardHeader>
-                                <CardTitle className={`text-lg ${darkMode ? "text-white" : "text-gray-900"}`}>Ask a Question</CardTitle>
-                                <CardDescription className={"text-black"}>
-                                    Ask about what was discussed in the recording
+                                <CardTitle className={`text-lg ${darkMode ? "text-white" : "text-gray-900"}`}>Faça uma pergunta</CardTitle>
+                                <CardDescription>
+                                    Pergunte sobre o que foi discutido na gravação
                                 </CardDescription>
                             </CardHeader>
                             <CardContent>
@@ -281,7 +285,7 @@ export function Room() {
                                     <Textarea
                                         value={newQuestion}
                                         onChange={(e) => setNewQuestion(e.target.value)}
-                                        placeholder="What would you like to know about the recording?"
+                                        placeholder="O que você gostaria de perguntar?"
                                         className={`min-h-[100px] transition-colors duration-300 ${darkMode
                                             ? "bg-purple-800/50 border-purple-600 text-white placeholder:text-purple-300"
                                             : "bg-white border-purple-200 text-black placeholder:text-purple-400"
@@ -290,13 +294,13 @@ export function Room() {
                                     />
                                     <Button
                                         type="submit"
-                                        className={`w-full transition-colors duration-300 ${darkMode
+                                        className={`cursor-pointer w-full transition-colors duration-300 ${darkMode
                                             ? "bg-purple-600 hover:bg-purple-700 text-white"
                                             : "bg-purple-600 hover:bg-purple-700 text-white"
                                             }`}
                                     >
                                         <Send className="h-4 w-4 mr-2" />
-                                        Submit Question
+                                        Enviar Pergunta
                                     </Button>
                                 </form>
                             </CardContent>
@@ -311,10 +315,10 @@ export function Room() {
                         >
                             <CardHeader>
                                 <CardTitle className={`text-xl ${darkMode ? "text-white" : "text-gray-900"}`}>
-                                    Questions & Answers
+                                    Perguntas e Respostas
                                 </CardTitle>
                                 <CardDescription className={darkMode ? "text-purple-200" : "text-purple-600"}>
-                                    All questions asked in this room and their answers
+                                    Todas as perguntas feitas nesta sala e suas respostas
                                 </CardDescription>
                             </CardHeader>
                             <CardContent>
@@ -331,7 +335,7 @@ export function Room() {
                                                         className={`h-4 w-4 ${darkMode ? "text-purple-300" : "text-purple-500"}`}
                                                     />
                                                     <span className={`text-sm ${darkMode ? "text-purple-200" : "text-purple-600"}`}>
-                                                        Question
+                                                        Pergunta
                                                     </span>
                                                 </div>
                                                 <div className="flex items-center gap-2">
@@ -349,7 +353,7 @@ export function Room() {
                                                         ) : (
                                                             <Clock className="h-3 w-3 mr-1" />
                                                         )}
-                                                        {qa.answer ? "Answered" : "Pending"}
+                                                        {qa.answer ? "Respondida" : "Pendente"}
                                                     </Badge>
                                                     <span className={`text-xs ${darkMode ? "text-purple-300" : "text-purple-500"}`}>
                                                         {dayjs().from(dayjs(qa.createdAt), true)}
@@ -376,6 +380,7 @@ export function Room() {
                                                         }`}
                                                 >
                                                     <FourSquare color="#9810FA" size="small" text="" textColor="" />
+                                                    <p>Esperando resposta da IA</p>
                                                 </div>
                                             )}
                                         </div>

@@ -19,6 +19,7 @@ import { useNavigate } from "react-router-dom"
 import relativeTime from 'dayjs/plugin/relativeTime'
 import dayjs from "dayjs"
 import 'dayjs/locale/pt-br'
+import logo from "../assets/logo.png"
 
 type GetRoomsAPIResponse = Array<{
     id: string,
@@ -36,7 +37,7 @@ export function CreateRoom() {
         description: "",
     })
 
-    const { data, isLoading } = useQuery({
+    const { data } = useQuery({
         queryKey: ['get-rooms'],
         queryFn: async () => {
             const response = (await fetch('http://localhost:3333/rooms'))
@@ -99,7 +100,8 @@ export function CreateRoom() {
             {/* Main Content */}
             <main className="container mx-auto px-4 py-8">
                 {/* Search Bar */}
-                <div className="mb-8 flex">
+                <div className="mb-8 flex" style={{alignItems: 'center'}}>
+                    <img src={logo} alt="Logo do MoonMentor" className={`h-15 ${darkMode && "bg-white rounded-full"}`} />
                     <div className="relative max-w-md mx-auto flex-1">
                         <Search
                             className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 ${darkMode ? "text-purple-300" : "text-purple-500"
@@ -107,7 +109,7 @@ export function CreateRoom() {
                         />
                         <Input
                             type="text"
-                            placeholder="Search rooms..."
+                            placeholder="Pesquise salas..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             className={`pl-10 transition-colors duration-300 ${darkMode
@@ -120,22 +122,22 @@ export function CreateRoom() {
                         variant="outline"
                         size="icon"
                         onClick={toggleDarkMode}
-                        className={`transition-colors duration-300 mr-5 ${darkMode ? "border-purple-600 hover:bg-purple-800" : "border-purple-900 hover:bg-purple-900 hover:text-purple-950"
+                        className={`cursor-pointer transition-colors duration-300 mr-5 ${darkMode ? "border-purple-600 hover:bg-purple-800" : "border-purple-900 hover:bg-purple-900 hover:text-purple-950"
                             }`}
                     >
                         {darkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-                        <span className="sr-only">Toggle dark mode</span>
+                        <span className="sr-only">Mudar para modo {darkMode ? "claro" : "escuro"}</span>
                     </Button>
                     <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
                         <DialogTrigger asChild>
                             <Button
-                                className={`transition-colors duration-300 ${darkMode
+                                className={`cursor-pointer transition-colors duration-300 ${darkMode
                                     ? "bg-purple-600 hover:bg-purple-700 text-white"
                                     : "bg-purple-600 hover:bg-purple-700 text-white"
                                     }`}
                             >
                                 <Plus className="h-4 w-4 mr-2" />
-                                Create Room
+                                Crie uma nova sala
                             </Button>
                         </DialogTrigger>
                         <DialogContent
@@ -143,9 +145,9 @@ export function CreateRoom() {
                                 }`}
                         >
                             <DialogHeader>
-                                <DialogTitle className={darkMode ? "text-white" : "text-gray-900"}>Create New Room</DialogTitle>
+                                <DialogTitle className={darkMode ? "text-white" : "text-gray-900"}>Crie uma nova sala!</DialogTitle>
                                 <DialogDescription className={darkMode ? "text-purple-200" : "text-purple-600"}>
-                                    Create a new study room for others to join and learn together.
+                                    Crie uma nova sala de estudos para que outros possam se juntar e aprender juntos.
                                 </DialogDescription>
                             </DialogHeader>
                             <form onSubmit={() => AddRoom()}>
@@ -155,13 +157,13 @@ export function CreateRoom() {
                                             htmlFor="room-name"
                                             className={`text-sm font-medium ${darkMode ? "text-purple-200" : "text-purple-700"}`}
                                         >
-                                            Room Name
+                                            Nome da Sala
                                         </Label>
                                         <Input
                                             id="room-name"
                                             value={newRoom.name}
                                             onChange={(e) => setNewRoom({ ...newRoom, name: e.target.value })}
-                                            placeholder="Enter room name..."
+                                            placeholder="Digite o nome da sala..."
                                             className={`transition-colors duration-300 ${darkMode
                                                 ? "bg-purple-800/50 border-purple-600 placeholder:text-purple-300 text-white"
                                                 : "bg-white border-purple-200 placeholder:text-purple-400 text-black"
@@ -174,13 +176,13 @@ export function CreateRoom() {
                                             htmlFor="room-description"
                                             className={`text-sm font-medium ${darkMode ? "text-purple-200" : "text-purple-700"}`}
                                         >
-                                            Description
+                                            Descrição
                                         </Label>
                                         <Textarea
                                             id="room-description"
                                             value={newRoom.description}
                                             onChange={(e) => setNewRoom({ ...newRoom, description: e.target.value })}
-                                            placeholder="Describe what this room is about..."
+                                            placeholder="Descreva sobre o que será discutido na sala..."
                                             className={`min-h-[100px] transition-colors duration-300 ${darkMode
                                                 ? "bg-purple-800/50 border-purple-600 text-white placeholder:text-purple-300"
                                                 : "bg-white border-purple-200 text-black placeholder:text-purple-400"
@@ -194,21 +196,21 @@ export function CreateRoom() {
                                         type="button"
                                         variant="outline"
                                         onClick={() => setIsCreateDialogOpen(false)}
-                                        className={`transition-colors duration-300 ${darkMode
+                                        className={`cursor-pointer transition-colors duration-300 ${darkMode
                                             ? "border-purple-600 text-purple-200 hover:bg-purple-800"
                                             : "border-purple-300 text-purple-700 hover:bg-purple-100 hover:text-purple-900"
                                             }`}
                                     >
-                                        Cancel
+                                        Cancelar
                                     </Button>
                                     <Button
                                         type="submit"
-                                        className={`transition-colors duration-300 ${darkMode
+                                        className={`cursor-pointer transition-colors duration-300 ${darkMode
                                             ? "bg-purple-600 hover:bg-purple-700 text-white"
                                             : "bg-purple-600 hover:bg-purple-700 text-white"
                                             }`}
                                     >
-                                        Create Room
+                                        Criar Sala
                                     </Button>
                                 </DialogFooter>
                             </form>
@@ -251,7 +253,7 @@ export function CreateRoom() {
                                 </CardContent>
                                 <CardFooter>
                                     <Button
-                                        className={`w-full transition-colors duration-300 ${darkMode
+                                        className={`cursor-pointer w-full transition-colors duration-300 ${darkMode
                                             ? "bg-purple-600 hover:bg-purple-700 text-white"
                                             : "bg-purple-600 hover:bg-purple-700 text-white"
                                             }`}

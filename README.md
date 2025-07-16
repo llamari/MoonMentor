@@ -18,6 +18,7 @@ Projeto NLW 2025 - Sistema de salas de estudo colaborativas com transcrição de
 
 - Node.js >= 18
 - PostgreSQL com extensão [pgvector](https://github.com/pgvector/pgvector)
+- Docker instalado
 - Chave de API do Google Gemini
 
 ## Instalação

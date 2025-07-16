@@ -85,4 +85,4 @@ MIT
 
 ---
 
-Projeto desenvolvido durante
+Projeto desenvolvido durante o NLW 2025.
